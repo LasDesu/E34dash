@@ -15,7 +15,6 @@ static const unsigned char defaultDump[] =
 };
 
 ClusterInfo::ClusterInfo()
-	: QObject()
 {
 	m_size = sizeof(defaultDump);
 	memcpy( m_data, defaultDump, m_size );
@@ -34,7 +33,7 @@ static inline unsigned get_mask_shift( unsigned mask )
 	return shift;
 }
 
-unsigned ClusterInfo::getData( unsigned addr, unsigned mask )
+unsigned ClusterInfo::getData( unsigned addr, unsigned mask ) const
 {
 	return (m_data[addr] & mask) >> get_mask_shift(mask);
 }
@@ -360,8 +359,6 @@ const static info_property_t records[] = {
 	  0x41, 0x1, 0xF0, NULL, false },
 	{ "TEILENUMMER[3]", TR("Part num[3]"),
 	  0x41, 0x1, 0x0F, NULL, false },
-
-	{ NULL, QString(), 0, 0, 0, NULL, false }
 };
 
 static inline char vinchar( unsigned n )
@@ -384,59 +381,83 @@ void ClusterInfo::parseData()
 
 void ClusterInfo::updateProperties()
 {
-	const info_property_t *r;
-	unsigned val;
+	dataChanged( index(1, 0), index(1, rowCount()) );
+}
 
-	emit propertiesReset();
-	for ( r = records; r->size; r ++ )
+int ClusterInfo::columnCount(const QModelIndex &/*parent*/) const
+{
+	return 3;
+}
+
+int ClusterInfo::rowCount(const QModelIndex &/*parent*/) const
+{
+	return sizeof(records) / sizeof(records[0]);
+}
+
+QVariant ClusterInfo::data(const QModelIndex &index, int role) const
+{
+	if ( !index.isValid() )
+		return QVariant();
+
+	if ( index.column() >= 3 )
+		return QVariant();
+
+	if ( index.row() >= rowCount() )
+		return QVariant();
+
+	if (role == Qt::DisplayRole /*|| role == Qt::EditRole*/)
 	{
-		int shift = get_mask_shift( r->mask );
-
-		//printf("%s:", r->name.toLocal8Bit().data());
-		if ( r->size > 1 )
+		const info_property_t *r = records + index.row();
+		switch ( index.column() )
 		{
-			//unsigned addr;
-			emit addProperty( r, (uintptr_t)&m_data[r->addr] );
-			/*for ( addr = r->addr;
-				  addr < (r->addr + r->size);
-				  addr ++ )
-				printf( " %.2X", m_data[addr] );
-			printf("\n");*/
-			continue;
-		}
-
-		val = getData( r->addr, r->mask );
-		//printf( " %x", val );
-		if ( !r->values )
-		{
-			emit addProperty( r, val );
-			//printf("\n");
-			continue;
-		}
-
-		const info_value_t *v;
-		for ( v = r->values; !v->name.isEmpty(); v ++ )
-		{
-			if ( r->complementary )
+			case 0:
+				return QString(r->prop);
+			case 2:
+				return QString(r->name);
+			case 1:
+			default:
 			{
-				if ( v->value == ((~val) & (r->mask >> shift)) )
-					break;
+				QString value;
+				unsigned val = getData( r->addr, r->mask );
+				unsigned shift = get_mask_shift( r->mask );
+				unsigned i;
+
+				if ( r->size > 1 )
+				{
+					for ( i = 0; i < r->size; i ++ )
+						value += QString("%1 ").arg( getData(r->addr + i), 2, 16, QChar('0') ).toUpper();
+				}
+				else
+					value = QString::number(val).toUpper() + "h ";
+
+				if ( !r->values )
+					return value;
+
+				const info_value_t *v;
+				for ( v = r->values; !v->name.isEmpty(); v ++ )
+				{
+					if ( r->complementary )
+					{
+						if ( v->value == ((~val) & (r->mask >> shift)) )
+							break;
+					}
+					else if ( r->size > 1 )
+					{
+						if ( memcmp( (void *)v->value, m_data + r->addr, r->size) == 0 )
+							break;
+					}
+					else if ( v->value == val )
+						break;
+				}
+				if ( v->name.isEmpty() )
+					return value;
+
+				return value + QString("'%1'").arg(v->name);
 			}
-			else if ( v->value == val )
-				break;
-		}
-		if ( v->name.isEmpty() )
-		{
-			emit addProperty( r, val );
-			//printf(" (unknown)\n");
-		}
-		else
-		{
-			emit addProperty( r, val, v );
-			//printf(" (%s)\n", v->name.toLocal8Bit().data());
 		}
 	}
-	//fflush( stdout );
+
+	return QVariant();
 }
 
 #define ODOMETER_OFFSET 34

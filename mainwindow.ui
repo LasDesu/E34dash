@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -86,185 +86,13 @@
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableDump">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="rowCount">
-           <number>16</number>
-          </property>
-          <property name="columnCount">
-           <number>16</number>
-          </property>
+         <widget class="QTableView" name="tableDump">
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>28</number>
+           <number>25</number>
           </attribute>
           <attribute name="verticalHeaderDefaultSectionSize">
-           <number>19</number>
+           <number>18</number>
           </attribute>
-          <row>
-           <property name="text">
-            <string>00</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>10</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>20</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>30</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>40</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>50</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>60</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>70</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>80</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>90</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>A0</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>B0</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>C0</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>D0</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>E0</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>F0</string>
-           </property>
-          </row>
-          <column>
-           <property name="text">
-            <string>x0</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x1</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x2</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x3</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x4</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x5</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x6</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x7</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x8</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>x9</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>xA</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>xB</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>xC</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>xD</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>xE</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>xF</string>
-           </property>
-          </column>
          </widget>
         </item>
        </layout>
@@ -1051,34 +879,13 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QTableWidget" name="tableProperties">
-          <property name="columnCount">
-           <number>3</number>
-          </property>
+         <widget class="QTableView" name="tableProperties">
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>200</number>
-          </attribute>
-          <attribute name="horizontalHeaderStretchLastSection">
-           <bool>true</bool>
           </attribute>
           <attribute name="verticalHeaderVisible">
            <bool>false</bool>
           </attribute>
-          <column>
-           <property name="text">
-            <string>Property</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Value</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Description</string>
-           </property>
-          </column>
          </widget>
         </item>
        </layout>

@@ -1,6 +1,7 @@
 #ifndef CLUSTERINFO_H
 #define CLUSTERINFO_H
 
+#include <QAbstractTableModel>
 #include <QObject>
 #include <QByteArray>
 #include <QString>
@@ -21,19 +22,24 @@ typedef struct property {
 	bool complementary;
 } info_property_t;
 
-class ClusterInfo : public QObject
+class ClusterInfo : public QAbstractTableModel
 {
 	Q_OBJECT
 
 public:
 	ClusterInfo();
 
+	int columnCount(const QModelIndex &parent = QModelIndex()) const;
+	int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
 	void parseData();
 	void updateProperties();
 	void updateSimple();
 
 	unsigned char *getDump( unsigned offset = 0 ) { return m_data + offset; }
-	unsigned getData( unsigned addr, unsigned mask = 0xFF );
+	unsigned getData( unsigned addr, unsigned mask = 0xFF ) const;
 	void setData( unsigned addr, unsigned val, unsigned mask = 0xFF );
 
 	int setVIN( const QString &vin );
@@ -57,8 +63,6 @@ private:
 
 signals:
 	void updateDump();
-	void propertiesReset();
-	void addProperty( const info_property_t *rec, uintptr_t value, const info_value_t *known = NULL );
 };
 
 #endif // CLUSTERINFO_H

@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	m_dumpmodel = new HexViewModel( &m_info );
+	ui->tableDump->setModel( m_dumpmodel );
+	ui->tableProperties->setModel( &m_info );
+
 	connect( &m_info, SIGNAL(updateDump()), this, SLOT(updateDump()) );
 	connect( &m_info, SIGNAL(propertiesReset()), this, SLOT(propertiesReset()) );
 	connect( &m_info, SIGNAL(addProperty(const info_property_t*,uintptr_t,const info_value_t*)),
@@ -199,19 +203,7 @@ void MainWindow::update_view()
 
 void MainWindow::updateDump()
 {
-	unsigned i;
-
-	ui->tableDump->setRowCount( m_info.m_size / 16 );
-	for ( i = 0; i < 16; i ++ )
-	{
-		ui->tableDump->setVerticalHeaderItem( i,
-			new QTableWidgetItem( QString("%1").arg( i << 4, 2, 16, QChar('0') ).toUpper() ) );
-	}
-	for ( i = 0; i < m_info.m_size; i ++ )
-	{
-		ui->tableDump->setItem( i / 16, i % 16,
-			new QTableWidgetItem( QString("%1").arg( m_info.getData(i), 2, 16, QChar('0') ).toUpper() ) );
-	}
+	m_dumpmodel->invalidate();
 }
 
 void MainWindow::on_chkSwapBytes_toggled(bool checked)
@@ -303,37 +295,6 @@ void MainWindow::on_spinOdometer_editingFinished()
 {
 	m_info.setOdometer( ui->spinOdometer->value() );
 	update_view();
-}
-
-void MainWindow::propertiesReset()
-{
-	//ui->tableProperties->clearContents();
-	while ( ui->tableProperties->rowCount() )
-		ui->tableProperties->removeRow( 0 );
-}
-
-void MainWindow::addProperty( const info_property_t *rec, uintptr_t value, const info_value_t *known )
-{
-	QString val;
-	int row = ui->tableProperties->rowCount();
-	ui->tableProperties->insertRow( row );
-	ui->tableProperties->setItem( row, 0, new QTableWidgetItem( rec->prop ) );
-	if ( rec->size == 1 )
-	{
-		val = QString::number(value, 16) + "h";
-		if ( known )
-			val += QString(" '%1'").arg(known->name);
-	}
-	else
-	{
-		unsigned i;
-		for ( i = 0; i < rec->size; i ++ )
-		{
-			val += QString("%1 ").arg( m_info.getData( rec->addr + i ), 2, 16, QChar('0') ).toUpper();
-		}
-	}
-	ui->tableProperties->setItem( row, 1, new QTableWidgetItem( val ) );
-	ui->tableProperties->setItem( row, 2, new QTableWidgetItem( rec->name ) );
 }
 
 void MainWindow::on_comboEngine_currentIndexChanged(int index)

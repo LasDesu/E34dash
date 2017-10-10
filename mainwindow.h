@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "clusterinfo.h"
+#include "hexviewmodel.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,11 +35,10 @@ private slots:
 private:
 	Ui::MainWindow *ui;
 	ClusterInfo m_info;
+	HexViewModel *m_dumpmodel;
 
 private slots:
 	void updateDump();
-	void propertiesReset();
-	void addProperty( const info_property_t *rec, uintptr_t value, const info_value_t *known );
 	void on_comboEngine_currentIndexChanged(int index);
 	void on_comboMaxSpeed_currentIndexChanged(int index);
 	void on_comboMaxRPM_currentIndexChanged(int index);
