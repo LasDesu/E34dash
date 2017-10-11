@@ -62,6 +62,7 @@ private slots:
 	void on_comboTempCurve_currentIndexChanged(int index);
 	void on_editPartNum_editingFinished();
 	void on_editCode_editingFinished();
+	void on_spinInspectionTime_editingFinished();
 };
 
 #endif // MAINWINDOW_H

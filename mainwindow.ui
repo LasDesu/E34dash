@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>696</width>
-    <height>439</height>
+    <width>759</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -87,11 +87,16 @@
         </item>
         <item>
          <widget class="QTableView" name="tableDump">
+          <property name="font">
+           <font>
+            <family>Monospace</family>
+           </font>
+          </property>
           <attribute name="horizontalHeaderDefaultSectionSize">
-           <number>25</number>
+           <number>30</number>
           </attribute>
           <attribute name="verticalHeaderDefaultSectionSize">
-           <number>18</number>
+           <number>22</number>
           </attribute>
          </widget>
         </item>
@@ -153,7 +158,7 @@
           <item row="2" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>BMW number</string>
+             <string>BMW no.</string>
             </property>
            </widget>
           </item>
@@ -170,7 +175,7 @@
           <item row="3" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
-             <string>Code NR</string>
+             <string>Coder no.</string>
             </property>
            </widget>
           </item>
@@ -473,6 +478,20 @@
             </property>
             <property name="maximum">
              <number>5023</number>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>Oil service</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="QSpinBox" name="spinOilService">
+            <property name="maximum">
+             <number>7</number>
             </property>
            </widget>
           </item>
@@ -821,20 +840,27 @@
             </item>
            </widget>
           </item>
-          <item row="10" column="1">
-           <widget class="QSpinBox" name="spinSpeedLimit">
-            <property name="maximum">
-             <number>508</number>
-            </property>
-            <property name="singleStep">
-             <number>2</number>
-            </property>
-           </widget>
-          </item>
           <item row="10" column="0">
            <widget class="QCheckBox" name="checkSpeedWarning">
             <property name="text">
              <string>Speed warning (km/h)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QSpinBox" name="spinSpeedLimit">
+            <property name="maximum">
+             <number>512</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>Inspection period (km)</string>
             </property>
            </widget>
           </item>
@@ -848,24 +874,17 @@
             </property>
            </widget>
           </item>
-          <item row="11" column="0">
-           <widget class="QLabel" name="label_19">
+          <item row="12" column="0">
+           <widget class="QLabel" name="label_24">
             <property name="text">
-             <string>Inspection period (km)</string>
+             <string>Inspection time (days)</string>
             </property>
            </widget>
           </item>
           <item row="12" column="1">
-           <widget class="QSpinBox" name="spinOilService">
+           <widget class="QSpinBox" name="spinInspectionTime">
             <property name="maximum">
-             <number>7</number>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0">
-           <widget class="QLabel" name="label_20">
-            <property name="text">
-             <string>Oil service</string>
+             <number>1023</number>
             </property>
            </widget>
           </item>
@@ -882,6 +901,9 @@
          <widget class="QTableView" name="tableProperties">
           <attribute name="horizontalHeaderDefaultSectionSize">
            <number>200</number>
+          </attribute>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
           </attribute>
           <attribute name="verticalHeaderVisible">
            <bool>false</bool>

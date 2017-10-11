@@ -15,9 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->tableProperties->setModel( &m_info );
 
 	connect( &m_info, SIGNAL(updateDump()), this, SLOT(updateDump()) );
-	connect( &m_info, SIGNAL(propertiesReset()), this, SLOT(propertiesReset()) );
-	connect( &m_info, SIGNAL(addProperty(const info_property_t*,uintptr_t,const info_value_t*)),
-			 this, SLOT(addProperty(const info_property_t*,uintptr_t,const info_value_t*)) );
 
 	m_info.parseData();
 	update_view();
@@ -30,7 +27,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::update_view()
 {
-	unsigned miles, engine, maxspeed, maxrpm, geardisplay, country, kzahl, overtemp;
+	unsigned miles, engine, maxspeed, maxrpm, geardisplay, country, kzahl, overtemp, insptime;
 	unsigned tmp;
 
 	updateDump();
@@ -174,6 +171,9 @@ void MainWindow::update_view()
 			kzahl = -1;
 	}
 
+	insptime = m_info.getData(0x1C, 0xFF) << 2;
+	insptime |= m_info.getData(0x1D, 0xC0);
+
 	ui->comboEngine->setCurrentIndex( engine );
 	ui->comboMaxSpeed->setCurrentIndex( maxspeed );
 	ui->comboMaxRPM->setCurrentIndex( maxrpm );
@@ -183,13 +183,14 @@ void MainWindow::update_view()
 	ui->comboSeries->setCurrentIndex( m_info.getData(0x32, 0x20) );
 	ui->spinKzahl->setValue( kzahl );
 	ui->spinInspectionPeriod->setValue( m_info.getData(0x1F, 0xFF) * 200 );
+	ui->spinInspectionTime->setValue( insptime );
 	ui->spinOilService->setValue( m_info.getData(0x1D, 0x38) );
 	ui->comboOvertemperature->setCurrentIndex( overtemp );
 
 	tmp = m_info.getData(0x22, 0xFF);
 	ui->checkSpeedWarning->setChecked( tmp != 0xFF );
 	ui->spinSpeedLimit->setVisible( tmp != 0xFF );
-	ui->spinSpeedLimit->setValue( (tmp != 0xFF) ? tmp * 2 : 120 );
+	ui->spinSpeedLimit->setValue( (tmp != 0xFF) ? /*tmp * 2*/ tmp + 50 : 120 );
 
 	ui->comboGearDisplay->setCurrentIndex( geardisplay );
 	ui->comboCheckControls->setCurrentIndex( m_info.getData(0x27, 0x0F) );
@@ -577,7 +578,8 @@ void MainWindow::on_spinSpeedLimit_editingFinished()
 
 	speed = ui->spinSpeedLimit->value();
 
-	speed /= 2;
+	//speed /= 2;
+	speed -= 50;
 	m_info.setData(0x22, speed, 0xFF);
 	m_info.setData(0x24, ~speed, 0xFF);
 	m_info.updateProperties();
@@ -626,4 +628,16 @@ void MainWindow::on_editPartNum_editingFinished()
 void MainWindow::on_editCode_editingFinished()
 {
 	m_info.setCodeNum( ui->editCode->text().toLong() );
+}
+
+void MainWindow::on_spinInspectionTime_editingFinished()
+{
+	unsigned time;
+
+	time = ui->spinInspectionTime->value();
+
+	m_info.setData(0x1C, time >> 3, 0xFF);
+	m_info.setData(0x1D, time, 0xC0);
+	m_info.updateProperties();
+	updateDump();
 }

@@ -157,6 +157,12 @@ static const info_value_t vals_getriebe[] = {
 	{ 0, NULL }
 };
 
+static const info_value_t vals_siazeit[] = {
+	{ 0x53, TR("335 days") },
+	{ 0xB3, TR("716 days") },
+	{ 0, NULL }
+};
+
 static const info_value_t vals_siagrenzeinspekt[] = {
 	{ 0xA1, TR("32.200 km") },
 	{ 0x96, TR("30.000 km") },
@@ -281,7 +287,11 @@ const static info_property_t records[] = {
 	  0x1B, 0x1, 0x01, vals_kvmoel, false },
 	{ "tacho_skala_endwert_kompl", TR("Speedometer scale limit (complementary)"),
 	  0x1B, 0x1, 0xFE, vals_tachoskala, true },
-	{ "GETRIEBE_ART", TR("Transmission type"),
+	{ "SIA_GRENZE_ZEIT", TR("SIA days limit (hi)"),
+	  0x1C, 0x1, 0xFF, vals_siazeit, false },
+	{ "SIA_GRENZE_ZEIT", TR("SIA days limit (lo)"),
+	  0x1D, 0x1, 0xC0, NULL, false },
+	{ "GETRIEBE_ART", TR("Transmission display"),
 	  0x1D, 0x1, 0x07, vals_getriebe, false },
 	{ "OELSERVICE_ANZAHL", TR("Oil service number"),
 	  0x1D, 0x1, 0x38, NULL, false },
@@ -394,6 +404,25 @@ int ClusterInfo::rowCount(const QModelIndex &/*parent*/) const
 	return sizeof(records) / sizeof(records[0]);
 }
 
+QVariant ClusterInfo::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if ( role != Qt::DisplayRole )
+		return QVariant();
+
+	if ( orientation == Qt::Horizontal )
+		switch ( section )
+		{
+			case 0:
+				return QString( tr("Property") );
+			case 1:
+				return QString( tr("Value") );
+			case 2:
+				return QString( tr("Description") );
+		}
+
+	return QVariant();
+}
+
 QVariant ClusterInfo::data(const QModelIndex &index, int role) const
 {
 	if ( !index.isValid() )
@@ -413,7 +442,7 @@ QVariant ClusterInfo::data(const QModelIndex &index, int role) const
 			case 0:
 				return QString(r->prop);
 			case 2:
-				return QString(r->name);
+				return QString(r->desc);
 			case 1:
 			default:
 			{
@@ -428,7 +457,7 @@ QVariant ClusterInfo::data(const QModelIndex &index, int role) const
 						value += QString("%1 ").arg( getData(r->addr + i), 2, 16, QChar('0') ).toUpper();
 				}
 				else
-					value = QString::number(val).toUpper() + "h ";
+					value = QString::number(val, 16).toUpper() + "h ";
 
 				if ( !r->values )
 					return value;
