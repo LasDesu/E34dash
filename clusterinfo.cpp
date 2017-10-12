@@ -40,6 +40,8 @@ unsigned ClusterInfo::getData( unsigned addr, unsigned mask ) const
 
 void ClusterInfo::setData( unsigned addr, unsigned val, unsigned mask )
 {
+	if ( m_readonly )
+		return;
 	m_data[addr] &= ~mask;
 	m_data[addr] |= (val << get_mask_shift(mask)) & mask;
 }

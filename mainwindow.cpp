@@ -32,6 +32,7 @@ void MainWindow::update_view()
 
 	updateDump();
 
+	m_info.setReadOnly( true );
 	ui->editVIN->setText( m_info.m_vin );
 	ui->spinOdometer->setValue( m_info.m_odometer );
 	ui->editPartNum->setText( m_info.m_partnum );
@@ -200,6 +201,8 @@ void MainWindow::update_view()
 	ui->comboUnitConsuption->setCurrentIndex( m_info.getData(0x33, 0xC0) );
 	ui->comboUnitTemperature->setCurrentIndex( m_info.getData(0x33, 0x20) );
 	ui->comboTimeFormat->setCurrentIndex( m_info.getData(0x33, 0x10) );
+
+	m_info.setReadOnly( false );
 }
 
 void MainWindow::updateDump()
@@ -302,6 +305,9 @@ void MainWindow::on_comboEngine_currentIndexChanged(int index)
 {
 	unsigned fuel, injection, cylinders;
 
+	if ( index < 0 )
+		return;
+
 	fuel = 0;	// gasoline
 	cylinders = 6;
 	injection = 0x78;	// M50B25 by default
@@ -370,6 +376,9 @@ void MainWindow::on_comboMaxSpeed_currentIndexChanged(int index)
 {
 	unsigned speed;
 
+	if ( index < 0 )
+		return;
+
 	speed = 0x61;
 	switch ( index )
 	{
@@ -407,6 +416,9 @@ void MainWindow::on_comboMaxRPM_currentIndexChanged(int index)
 {
 	unsigned rpm = 0x56;
 
+	if ( index < 0 )
+		return;
+
 	switch ( index )
 	{
 		case 0:	// 7000 rpm 3 imp/kwu
@@ -424,6 +436,8 @@ void MainWindow::on_comboMaxRPM_currentIndexChanged(int index)
 
 void MainWindow::on_comboSeries_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setData(0x32, index, 0x20);
 	m_info.updateProperties();
 	updateDump();
@@ -431,6 +445,8 @@ void MainWindow::on_comboSeries_currentIndexChanged(int index)
 
 void MainWindow::on_comboCheckControls_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setData(0x27, index, 0x0F);
 	m_info.updateProperties();
 	updateDump();
@@ -438,6 +454,8 @@ void MainWindow::on_comboCheckControls_currentIndexChanged(int index)
 
 void MainWindow::on_comboLanguage_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setData(0x27, index, 0xF0);
 	m_info.updateProperties();
 	updateDump();
@@ -445,6 +463,8 @@ void MainWindow::on_comboLanguage_currentIndexChanged(int index)
 
 void MainWindow::on_comboUnitLength_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setData(0x19, index, 0x01);
 	m_info.updateProperties();
 	updateDump();
@@ -452,6 +472,8 @@ void MainWindow::on_comboUnitLength_currentIndexChanged(int index)
 
 void MainWindow::on_comboUnitConsuption_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setData(0x33, index, 0xC0);
 	m_info.updateProperties();
 	updateDump();
@@ -459,6 +481,8 @@ void MainWindow::on_comboUnitConsuption_currentIndexChanged(int index)
 
 void MainWindow::on_comboUnitTemperature_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setData(0x33, index, 0x20);
 	m_info.updateProperties();
 	updateDump();
@@ -466,6 +490,8 @@ void MainWindow::on_comboUnitTemperature_currentIndexChanged(int index)
 
 void MainWindow::on_comboTimeFormat_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setData(0x33, index, 0x10);
 	m_info.updateProperties();
 	updateDump();
@@ -474,6 +500,9 @@ void MainWindow::on_comboTimeFormat_currentIndexChanged(int index)
 void MainWindow::on_comboGearDisplay_currentIndexChanged(int index)
 {
 	unsigned display = 0;
+
+	if ( index < 0 )
+		return;
 
 	switch ( index )
 	{
@@ -493,6 +522,9 @@ void MainWindow::on_comboGearDisplay_currentIndexChanged(int index)
 void MainWindow::on_comboCountry_currentIndexChanged(int index)
 {
 	unsigned country = 0;
+
+	if ( index < 0 )
+		return;
 
 	switch ( index )
 	{
@@ -557,6 +589,9 @@ void MainWindow::on_comboOvertemperature_currentIndexChanged(int index)
 {
 	unsigned temp = 0x1A;
 
+	if ( index < 0 )
+		return;
+
 	switch ( index )
 	{
 		case 0: // 121
@@ -605,6 +640,9 @@ void MainWindow::on_checkSpeedWarning_toggled(bool checked)
 
 void MainWindow::on_comboKVAoil_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
+
 	m_info.setData(0x1B, index, 0x01);
 	m_info.updateProperties();
 	updateDump();
@@ -612,11 +650,15 @@ void MainWindow::on_comboKVAoil_currentIndexChanged(int index)
 
 void MainWindow::on_comboTank_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setTank( index );
 }
 
 void MainWindow::on_comboTempCurve_currentIndexChanged(int index)
 {
+	if ( index < 0 )
+		return;
 	m_info.setTempSensor( index );
 }
 

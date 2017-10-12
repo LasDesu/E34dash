@@ -43,6 +43,8 @@ public:
 	unsigned getData( unsigned addr, unsigned mask = 0xFF ) const;
 	void setData( unsigned addr, unsigned val, unsigned mask = 0xFF );
 
+	void setReadOnly( bool val = true ) { m_readonly = val; }
+
 	int setVIN( const QString &vin );
 	void setOdometer( unsigned milage );
 	void setTank( int index );
@@ -51,6 +53,7 @@ public:
 	void setCodeNum( unsigned num );
 
 	unsigned m_size;
+	bool m_readonly;
 
 	QString m_vin;
 	QString m_partnum;
