@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QByteArray>
 #include <QString>
+//#include <stdint.h> //un comment this line if you building in Ubuntu with qmake
 
 typedef struct rec_value
 {
